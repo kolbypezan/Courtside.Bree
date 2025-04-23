@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>@Courtside.bree | Sports Photography</title>
+  <link rel="icon" type="image/png" href="icons8-camera-50.png" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    :root {
+      --bg: #f4f4f4;
+      --text: #333;
+      --section: white;
+      --btn-bg: white;
+      --btn-text: black;
+      --hover-bg: black;
+      --hover-text: white;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .dark-mode {
+      --bg: #121212;
+      --text: #eee;
+      --section: #1e1e1e;
+      --btn-bg: #2b2b2b;
+      --btn-text: white;
+      --hover-bg: #fff;
+      --hover-text: black;
+    }
+
+    header {
+      position: relative;
+      background: url('top.jpg') no-repeat center center/cover;
+      padding: 100px 20px;
+      text-align: center;
+      color: white;
+    }
+
+    header::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 0;
+    }
+
+    header h1,
+    .nav-buttons,
+    #toggle-theme {
+      position: relative;
+      z-index: 1;
+    }
+
+    header h1 a {
+      color: white;
+      text-decoration: none;
+      font-size: 3rem;
+      font-weight: bold;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    header h1 img {
+      filter: drop-shadow(0px 1px 2px rgba(0,0,0,0.5));
+    }
+
+    .nav-buttons {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .nav-buttons a {
+      background: var(--btn-bg);
+      color: var(--btn-text);
+      padding: 10px 20px;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background 0.3s;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .nav-buttons a:hover {
+      background: var(--hover-bg);
+      color: var(--hover-text);
+    }
+
+    #toggle-theme {
+      margin-top: 15px;
+      background: var(--btn-bg);
+      color: var(--btn-text);
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    section {
+      padding: 60px 50px;
+      background: var(--section);
+    }
+
+    section h2 {
+      font-size: 2rem;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 25px;
+    }
+
+    .gallery img {
+      width: 100%;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      object-fit: cover;
+      transition: transform 0.2s;
+    }
+
+    .gallery img:hover {
+      transform: scale(1.02);
+    }
+
+    .download-btn {
+      background: var(--btn-bg);
+      color: var(--btn-text);
+      border: none;
+      padding: 10px 18px;
+      border-radius: 4px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .download-btn:hover {
+      background: var(--hover-bg);
+      color: var(--hover-text);
+    }
+
+    .lightbox {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 100vw;
+      background: rgba(0, 0, 0, 0.95);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      flex-direction: column;
+    }
+
+    .lightbox img {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 10px;
+    }
+
+    .lightbox.show {
+      display: flex;
+    }
+
+    .lightbox-close,
+    .lightbox-arrow {
+      position: absolute;
+      color: white;
+      font-size: 2rem;
+      cursor: pointer;
+      user-select: none;
+      z-index: 1001;
+    }
+
+    .lightbox-close {
+      top: 20px;
+      right: 30px;
+    }
+
+    .lightbox-arrow.left {
+      top: 50%;
+      left: 40px;
+      transform: translateY(-50%);
+    }
+
+    .lightbox-arrow.right {
+      top: 50%;
+      right: 40px;
+      transform: translateY(-50%);
+    }
+
+    form input, form textarea {
+      width: 100%;
+      margin: 10px 0;
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    @media (max-width: 600px) {
+  header {
+    padding: 90px 20px;
+  }
+
+  header h1 a {
+    font-size: 1.8rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: nowrap;
+    margin-bottom: 24px;
+  }
+
+  header h1 img {
+    width: 30px;
+    height: 30px;
+    margin: 0;
+    padding: 0;
+    filter: drop-shadow(0px 1px 2px rgba(0,0,0,0.5));
+  }
+
+  .nav-buttons {
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    margin-top: 20px;
+  }
+
+  .nav-buttons a {
+    width: 75%;
+    max-width: 200px;
+    padding: 10px 0;
+    font-size: 0.9rem;
+  }
+
+      #toggle-theme {
+        margin-top: 20px;
+        font-size: 0.95rem;
+        padding: 10px 18px;
+      }
+
+      section h2 {
+        font-size: 1.6rem;
+      }
+
+      .gallery {
+        gap: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>
+      <a href="https://www.instagram.com/courtside.bree/?hl=en" target="_blank">
+        @Courtside.bree
+        <img src="icons8-instagram-48.png" alt="Instagram Icon" />
+      </a>
+    </h1>
+    <div class="nav-buttons">
+      <a href="#basketball">Basketball</a>
+      <a href="#baseball">Baseball</a>
+      <a href="#soccer">Soccer</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <button id="toggle-theme">Toggle Dark Mode</button>
+  </header>
+
+  <section id="basketball">
+    <h2>Basketball</h2>
+    <div class="gallery">
+      <img src="first.jpg" alt="" data-index="0" />
+      <img src="second.jpg" alt="" data-index="1" />
+      <img src="third.jpg" alt="" data-index="2" />
+    </div>
+  </section>
+
+  <section id="baseball">
+    <h2>Baseball</h2>
+    <div class="gallery">
+      <img src="fourth.jpg" alt="" data-index="3" />
+      <img src="fifth.jpg" alt="" data-index="4" />
+      <img src="sixth.jpg" alt="" data-index="5" />
+    </div>
+  </section>
+
+  <section id="soccer">
+    <h2>Soccer</h2>
+    <div class="gallery">
+      <img src="seventh.jpg" alt="" data-index="6" />
+      <img src="eighth.jpg" alt="" data-index="7" />
+      <img src="ninth.jpg" alt="" data-index="8" />
+    </div>
+  </section>
+
+  <section id="contact">
+    <h2>Contact / Booking</h2>
+    <form action="https://formspree.io/f/your-form-id" method="POST" style="max-width: 600px; margin: auto;">
+      <input type="text" name="name" placeholder="Your Name" required>
+      <input type="email" name="_replyto" placeholder="Your Email" required>
+      <textarea name="message" placeholder="Tell me about the shoot you're looking for..." required></textarea>
+      <button type="submit" class="download-btn">Send</button>
+    </form>
+  </section>
+
+  <div class="lightbox" id="lightbox">
+    <span class="lightbox-close" id="lightbox-close">&times;</span>
+    <span class="lightbox-arrow left" id="prev">&#10094;</span>
+    <img id="lightbox-img" src="" alt="Preview" />
+    <button id="lightbox-download" class="download-btn">Download</button>
+    <span class="lightbox-arrow right" id="next">&#10095;</span>
+  </div>
+
+  <script>
+    const themeToggleBtn = document.getElementById('toggle-theme');
+    const storedTheme = localStorage.getItem('theme');
+    if (storedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+    }
+
+    themeToggleBtn.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      const currentTheme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+      localStorage.setItem('theme', currentTheme);
+    });
+
+    const images = Array.from(document.querySelectorAll('.gallery img'));
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const closeBtn = document.getElementById('lightbox-close');
+    const nextBtn = document.getElementById('next');
+    const prevBtn = document.getElementById('prev');
+    const downloadBtn = document.getElementById('lightbox-download');
+    let currentIndex = 0;
+
+    images.forEach((img, index) => {
+      img.addEventListener('click', () => {
+        currentIndex = index;
+        lightboxImg.src = img.src;
+        lightbox.classList.add('show');
+      });
+    });
+
+    function showImage(index) {
+      currentIndex = (index + images.length) % images.length;
+      lightboxImg.src = images[currentIndex].src;
+    }
+
+    nextBtn.addEventListener('click', () => showImage(currentIndex + 1));
+    prevBtn.addEventListener('click', () => showImage(currentIndex - 1));
+    closeBtn.addEventListener('click', () => lightbox.classList.remove('show'));
+
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox || e.target === lightboxImg) {
+        lightbox.classList.remove('show');
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('show')) return;
+      if (e.key === 'ArrowRight') showImage(currentIndex + 1);
+      if (e.key === 'ArrowLeft') showImage(currentIndex - 1);
+      if (e.key === 'Escape') lightbox.classList.remove('show');
+    });
+
+    downloadBtn.addEventListener('click', async () => {
+      const imageUrl = lightboxImg.src;
+      const fileName = imageUrl.split('/').pop();
+
+      try {
+        const response = await fetch(imageUrl, { mode: 'cors' });
+        const blob = await response.blob();
+        const blobUrl = URL.createObjectURL(blob);
+
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(blobUrl);
+      } catch (error) {
+        alert('Failed to download image.');
+        console.error(error);
+      }
+    });
+  </script>
+</body>
+</html>
+</html>
